@@ -126,9 +126,29 @@ export default function Game() {
     
     setIsPredicting(true)
     const predictions = await modelToUse.predict(videoRef.current)
-    const englishLabel = predictions[0]?.className || 'none'
-    const japaneseLabel = translateLabel(englishLabel)
-    setPrediction(japaneseLabel === '検出中...' ? '検出中...' : englishLabel)
+    
+    // 予測結果を信頼度（probability）の高い順にソート
+    const sortedPredictions = predictions.sort((a, b) => b.probability - a.probability)
+    const topPrediction = sortedPredictions[0]
+    
+    // 信頼度が0.7以上の場合のみ有効な予測として扱う
+    const confidenceThreshold = 0.7
+    let englishLabel = 'none'
+    
+    if (topPrediction && topPrediction.probability >= confidenceThreshold) {
+      // 'none'クラスは除外
+      const validPrediction = sortedPredictions.find(p => p.className !== 'none' && p.probability >= confidenceThreshold)
+      if (validPrediction) {
+        englishLabel = validPrediction.className
+      }
+    }
+    
+    // デバッグ用：コンソールに予測結果を出力（開発時のみ）
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Predictions:', predictions.map(p => `${p.className}: ${(p.probability * 100).toFixed(1)}%`))
+    }
+    
+    setPrediction(englishLabel === 'none' ? '検出中...' : englishLabel)
     setIsPredicting(false)
     
     requestAnimationFrame(() => predictLoop(modelToUse))
