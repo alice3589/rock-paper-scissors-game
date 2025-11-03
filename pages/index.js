@@ -9,7 +9,6 @@ export default function Home() {
         <h1 className={styles.title}>ジャンケンゲーム</h1>
         <p className={styles.description}>カメラを使って手でジャンケンできるゲーム</p>
         <div className={styles.buttonContainer}>
-          <button className={styles.button} onClick={() => router.push('/practice')}>練習モード</button>
           <button className={styles.button} onClick={() => router.push('/game')}>ゲーム開始</button>
         </div>
         <div className={styles.infoBox}>
@@ -18,7 +17,7 @@ export default function Home() {
             <li>3本勝負でジャンケン</li>
             <li>カメラを起動し、手がしっかり映る位置に座ってください</li>
             <li>カメラに向けて手を挙げてグー、パー、チョキを出してください</li>
-            <li>まずは練習モードで手の形を練習してからゲームを始めましょう</li>
+            <li>手の形をしっかり認識できるようにしてください</li>
           </ul>
         </div>
       </div>
