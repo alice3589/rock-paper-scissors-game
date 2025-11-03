@@ -17,12 +17,20 @@ export default function Game() {
   const [roundResult, setRoundResult] = useState(null)
 
   useEffect(() => {
-    init()
-    return () => {
-      if (videoRef.current) {
-        const stream = videoRef.current.srcObject
-        if (stream) {
-          stream.getTracks().forEach(track => track.stop())
+    // クライアント側でのみ実行
+    if (typeof window !== 'undefined') {
+      // 少し遅延させてDOM要素が確実にマウントされるようにする
+      const timer = setTimeout(() => {
+        init()
+      }, 100)
+      
+      return () => {
+        clearTimeout(timer)
+        if (videoRef.current) {
+          const stream = videoRef.current.srcObject
+          if (stream) {
+            stream.getTracks().forEach(track => track.stop())
+          }
         }
       }
     }
@@ -54,16 +62,31 @@ export default function Game() {
       console.log('Model loaded successfully')
       setModel(loadedModel)
       
+      // ビデオ要素がマウントされているか確認
+      if (!videoRef.current) {
+        throw new Error('ビデオ要素がまだマウントされていません')
+      }
+      
       const video = videoRef.current
+      if (!video) {
+        throw new Error('ビデオ要素が見つかりません')
+      }
+
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         const stream = await navigator.mediaDevices.getUserMedia({
           video: { width: 640, height: 480 }
         })
-        video.srcObject = stream
-        video.play()
-        setIsLoading(false)
-        
-        predictLoop(loadedModel)
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream
+          await videoRef.current.play()
+          setIsLoading(false)
+          predictLoop(loadedModel)
+        } else {
+          stream.getTracks().forEach(track => track.stop())
+          throw new Error('ビデオ要素が利用できなくなりました')
+        }
+      } else {
+        throw new Error('カメラ機能が利用できません')
       }
     } catch (error) {
       console.error('Error loading model or camera:', error)
@@ -188,6 +211,21 @@ export default function Game() {
         ジャンケンゲーム
       </h1>
 
+      {/* ビデオ要素を常にレンダリング（useRefが動作するため） */}
+      <video
+        ref={videoRef}
+        className="video"
+        autoPlay
+        playsInline
+        muted
+        style={{ 
+          display: isLoading || gameStatus !== 'playing' ? 'none' : 'block',
+          width: '100%',
+          borderRadius: '15px',
+          transform: 'scaleX(-1)'
+        }}
+      />
+
       {isLoading ? (
         <div className="loading">
           <p>モデルとカメラを読み込み中...</p>
@@ -227,13 +265,6 @@ export default function Game() {
           </div>
 
           <div className="camera-container">
-            <video
-              ref={videoRef}
-              className="video"
-              autoPlay
-              playsInline
-              muted
-            />
             <div className="prediction-box">
               <div style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>
                 あなたの手:
