@@ -38,7 +38,9 @@ export default function Game() {
 
   const init = async () => {
     try {
-      const URL = '/model'
+      // Next.jsのbasePathを取得（GitHub Pages対応）
+      const basePath = router.basePath || ''
+      const URL = `${basePath}/model`
       const modelURL = URL + '/model.json'
       const metadataURL = URL + '/metadata.json'
 
