@@ -308,13 +308,14 @@ export default function Game() {
           </div>
 
           {roundResult && (
-            <button 
-              className="button"
-              onClick={() => setRoundResult(null)}
-              style={{ marginTop: '1rem', display: 'block', margin: '1rem auto 0' }}
-            >
-              次のラウンドへ
-            </button>
+            <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+              <button 
+                className="button"
+                onClick={() => setRoundResult(null)}
+              >
+                次のラウンドへ
+              </button>
+            </div>
           )}
         </>
       )}
