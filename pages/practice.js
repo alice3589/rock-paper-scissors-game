@@ -81,7 +81,7 @@ export default function Practice() {
       {isLoading ? (
         <div className="loading">
           <p>モデルとカメラを読み込み中...</p>
-          <p style={{ fontSize: '0.9rem', marginTop: '0.5rem', color: '#999' }}>
+          <p style={{ fontSize: '0.9rem', marginTop: '0.5rem', color: '#000' }}>
             初回起動時はモデルファイルを読み込むのに時間がかかります
           </p>
         </div>
@@ -117,21 +117,21 @@ export default function Practice() {
               <div className="gesture-sample">
                 <div className="gesture-icon">✊</div>
                 <div><strong>グー</strong></div>
-                <div style={{ fontSize: '0.9rem', color: '#666', marginTop: '0.5rem' }}>
+                <div style={{ fontSize: '0.9rem', color: '#000', marginTop: '0.5rem' }}>
                   手をグーに握ってください
                 </div>
               </div>
               <div className="gesture-sample">
                 <div className="gesture-icon">🖐</div>
                 <div><strong>パー</strong></div>
-                <div style={{ fontSize: '0.9rem', color: '#666', marginTop: '0.5rem' }}>
+                <div style={{ fontSize: '0.9rem', color: '#000', marginTop: '0.5rem' }}>
                   全ての指を開いてください
                 </div>
               </div>
               <div className="gesture-sample">
                 <div className="gesture-icon">✌</div>
                 <div><strong>チョキ</strong></div>
-                <div style={{ fontSize: '0.9rem', color: '#666', marginTop: '0.5rem' }}>
+                <div style={{ fontSize: '0.9rem', color: '#000', marginTop: '0.5rem' }}>
                   人差し指と中指を立ててください
                 </div>
               </div>
