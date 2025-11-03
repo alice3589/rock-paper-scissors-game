@@ -108,21 +108,42 @@ body {
 }
 
 .button {
-  background: rgba(255, 255, 255, 0.95);
-  color: #000;
-  border: 2px solid #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
   padding: 1rem 2rem;
+  border-top: 1px solid #2589d0;
+  border-right: none;
+  border-bottom: 1px solid #2589d0;
+  border-left: none;
+  background-color: #fff;
+  color: #2589d0;
   font-size: 1.1rem;
-  border-radius: 10px;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   margin: 0.5rem;
+}
+
+.button::before,
+.button::after {
+  position: absolute;
+  width: 1px;
+  height: 140%;
+  background-color: #2589d0;
+  content: '';
+}
+
+.button::before {
+  left: calc(3.1em / 5 - 1px);
+}
+
+.button::after {
+  right: calc(3.1em / 5 - 1px);
 }
 
 .button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .button:active {
