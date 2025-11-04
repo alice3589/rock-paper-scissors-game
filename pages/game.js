@@ -8,6 +8,7 @@ export default function Game() {
   const [model, setModel] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [prediction, setPrediction] = useState(null)
+  const [lastValidPrediction, setLastValidPrediction] = useState(null)
   const [isPredicting, setIsPredicting] = useState(false)
   const [round, setRound] = useState(1)
   const [userScore, setUserScore] = useState(0)
@@ -148,6 +149,10 @@ export default function Game() {
       console.log('Predictions:', predictions.map(p => `${p.className}: ${(p.probability * 100).toFixed(1)}%`))
     }
     
+    if (englishLabel !== 'none') {
+      setLastValidPrediction(englishLabel)
+    }
+
     setPrediction(englishLabel === 'none' ? '検出中...' : englishLabel)
     setIsPredicting(false)
     
@@ -185,13 +190,18 @@ export default function Game() {
     return 'lose'
   }
 
-  const playRound = () => {
-    if (!prediction || prediction === '検出中...' || prediction === 'none') {
+  const playRound = (options) => {
+    const force = options?.force ?? false
+    const hasValidPrediction = prediction && prediction !== '検出中...' && prediction !== 'none'
+
+    if (!force && !hasValidPrediction) {
       alert('手の形を認識できません。もう一度試してください。')
       return
     }
 
-    const userChoice = prediction
+    const userChoice = hasValidPrediction
+      ? prediction
+      : (lastValidPrediction || 'rock')
     const compChoice = getComputerChoice()
     const result = getResult(userChoice, compChoice)
 
@@ -225,6 +235,7 @@ export default function Game() {
     setGameStatus('playing')
     setComputerChoice(null)
     setRoundResult(null)
+    setLastValidPrediction(null)
   }
 
   return (
@@ -316,14 +327,31 @@ export default function Game() {
             </div>
           )}
 
-          <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+          <div
+            style={{
+              textAlign: 'center',
+              marginTop: '2rem',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '1rem'
+            }}
+          >
             <button 
               className="button"
-              onClick={playRound}
+              onClick={() => playRound()}
               disabled={!prediction || prediction === '検出中...' || prediction === 'none' || roundResult !== null}
               style={{ fontSize: '1.2rem', padding: '1rem 2rem' }}
             >
               決定！
+            </button>
+            <button
+              className="button"
+              onClick={() => playRound({ force: true })}
+              disabled={roundResult !== null}
+              style={{ fontSize: '1.1rem', padding: '0.8rem 1.8rem' }}
+            >
+              結果を表示
             </button>
           </div>
 
