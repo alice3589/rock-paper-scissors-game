@@ -191,28 +191,28 @@ export default function Game() {
       return
     }
 
+    const userChoice = prediction
     const compChoice = getComputerChoice()
-    setComputerChoice(compChoice)
-    const result = getResult(prediction, compChoice)
+    const result = getResult(userChoice, compChoice)
 
+    const nextUserScore = userScore + (result === 'win' ? 1 : 0)
+    const nextComputerScore = computerScore + (result === 'lose' ? 1 : 0)
+
+    setComputerChoice(compChoice)
     setRoundResult(result)
-    
-    if (result === 'win') {
-      setUserScore(userScore + 1)
-    } else if (result === 'lose') {
-      setComputerScore(computerScore + 1)
-    }
+    setUserScore(nextUserScore)
+    setComputerScore(nextComputerScore)
 
     if (round >= 3) {
       setTimeout(() => {
-        if (userScore + (result === 'win' ? 1 : 0) > computerScore + (result === 'lose' ? 1 : 0)) {
+        if (nextUserScore > nextComputerScore) {
           setGameStatus('won')
-        } else if (userScore + (result === 'win' ? 1 : 0) < computerScore + (result === 'lose' ? 1 : 0)) {
+        } else if (nextUserScore < nextComputerScore) {
           setGameStatus('lost')
         } else {
           setGameStatus('draw')
         }
-      }, 2000)
+      }, 1500)
     } else {
       setRound(round + 1)
     }
