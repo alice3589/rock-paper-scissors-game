@@ -117,7 +117,8 @@ export default function Game() {
     const labelMap = {
       'グー': 'rock',
       'パー': 'paper',
-      'チョキ': 'scissors'
+      'チョキ': 'scissors',
+      '何もなし': 'none'
     }
     return labelMap[japaneseLabel] || japaneseLabel
   }
@@ -137,10 +138,33 @@ export default function Game() {
     let englishLabel = 'none'
     
     if (topPrediction && topPrediction.probability >= confidenceThreshold) {
-      // 'none'クラスは除外
-      const validPrediction = sortedPredictions.find(p => p.className !== 'none' && p.probability >= confidenceThreshold)
+      // ラベルを英語に正規化（Teachable Machineの日本語ラベル対応）
+      const toEnglish = (label) => {
+        const map = {
+          'グー': 'rock',
+          'チョキ': 'scissors',
+          'パー': 'paper',
+          '何もなし': 'none',
+          'rock': 'rock',
+          'paper': 'paper',
+          'scissors': 'scissors',
+          'none': 'none',
+        }
+        return map[label] || label
+      }
+
+      const normalizedPredictions = sortedPredictions.map(p => ({
+        ...p,
+        normalizedLabel: toEnglish(p.className),
+      }))
+
+      // 'none'（何もなし）以外でしきい値を超えるものを採用
+      const validPrediction = normalizedPredictions.find(
+        p => p.normalizedLabel !== 'none' && p.probability >= confidenceThreshold
+      )
+
       if (validPrediction) {
-        englishLabel = validPrediction.className
+        englishLabel = validPrediction.normalizedLabel
       }
     }
     
