@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <div className={styles.main}>
-        <h1 className={styles.title}>ジャンケンゲーム、テスト用テキスト</h1>
+        <h1 className={styles.title}>ジャンケンゲーム</h1>
         <p className={styles.description}>カメラを使って手でジャンケンできるゲーム</p>
         <div className={styles.buttonContainer}>
           <button className={styles.button} onClick={() => router.push('/game')}>ゲーム開始</button>
