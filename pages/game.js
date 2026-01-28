@@ -153,6 +153,8 @@ export default function Game() {
         return map[label] || label
       }
 
+
+      // aaa
       const normalizedPredictions = sortedPredictions.map(p => ({
         ...p,
         normalizedLabel: toEnglish(p.className),
